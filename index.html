@@ -9,230 +9,216 @@
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <style>
     body {
-      background-color: #111;
       font-family: 'Open Sans', sans-serif;
+      background-color: #ffffff;
+      color: #000000;
       padding: 20px;
-      color: #e0ffe0;
     }
     h1, h4 {
-      color: #00ff88;
+      color: #3ca73c;
       text-align: center;
       margin-bottom: 30px;
     }
     .patient-box {
-      background-color: #1a1a1a;
-      color: #00ff88;
-      padding: 15px;
+      background-color: #f5f5f5;
+      border: 2px solid #3ca73c;
       border-radius: 10px;
+      padding: 15px;
       margin-bottom: 20px;
-      max-width: 600px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .patient-info {
-      color: #00ff88;
-      font-weight: 600;
-      text-align: left;
+      font-weight: bold;
+      color: #3ca73c;
       margin-bottom: 20px;
+      text-align: center;
     }
     table {
-      background: #1a1a1a;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
       border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
     }
     th {
-      background-color: #00ff88;
-      color: #111;
+      background-color: #3ca73c;
+      color: #ffffff;
       text-align: center;
-      vertical-align: middle;
     }
     td[contenteditable="true"] {
-      background-color: #222;
-      color: #fff;
+      background-color: #f8f8f8;
       cursor: text;
     }
-    td[contenteditable="true"]:hover {
-      background-color: #2a2a2a;
-    }
     .btn-success {
-      background-color: #00ff88;
-      border-color: #00cc66;
-      color: #111;
+      background-color: #3ca73c;
+      border: none;
+      color: white;
     }
     .btn-success:hover {
-      background-color: #00cc66;
-      color: #fff;
+      background-color: #2e7c2e;
     }
-    .btn-outline-secondary,
-    .btn-secondary {
-      background-color: #333;
-      border-color: #00ff88;
-      color: #00ff88;
+    .btn-outline-secondary {
+      color: #3ca73c;
+      border-color: #3ca73c;
     }
-    .btn-outline-secondary:hover,
-    .btn-secondary:hover {
-      background-color: #00ff88;
-      color: #111;
-    }
-    .btn-primary {
-      background-color: #006644;
-      border-color: #00ff88;
+    .btn-outline-secondary:hover {
+      background-color: #3ca73c;
+      color: white;
     }
     .btn-warning {
-      background-color: #ffcc00;
-      color: #111;
+      background-color: #e30613;
+      border: none;
+      color: white;
     }
-    .table {
-      color: #fff;
+    .btn-warning:hover {
+      background-color: #b1040f;
     }
-    input,
-    textarea,
-    select {
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #00ff88;
+    input, select, textarea {
+      border: 1px solid #3ca73c;
     }
     #mainSection {
       display: none;
     }
     .logo-container {
-      text-align: right;
-      margin-bottom: 10px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
     }
     .logo-container img {
-      max-height: 80px;
+      height: 150px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- Logo en haut à droite -->
-    <div class="logo-container">
-      <img src="logo.png" alt="Logo" />
-    </div>
+  <div class="logo-container">
+    <img src="logo.png" alt="Logo US Montmélian" />
+  </div>
 
-    <h1>Suivi d’une Séance</h1>
+  <h1>Suivi d’une Séance</h1>
 
-    <!-- Champs cachés -->
-    <input type="hidden" id="prenomPatient">
-    <input type="hidden" id="nomPatient">
+  <!-- Champs cachés -->
+  <input type="hidden" id="prenomPatient">
+  <input type="hidden" id="nomPatient">
 
-    <!-- Écran de démarrage -->
-    <div id="startSection">
-      <div class="patient-box">
-        <h5 style="color:#00ff88;">Nouvelle séance</h5>
-        <div class="row g-2 mb-3">
-          <div class="col">
-            <input type="text" class="form-control" id="prenomStart" placeholder="Prénom">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" id="nomStart" placeholder="Nom">
-          </div>
-          <div class="col">
-            <input type="date" class="form-control" id="dateStart">
-          </div>
+  <!-- Écran de démarrage -->
+  <div id="startSection">
+    <div class="patient-box">
+      <h5 class="text-center">Nouvelle séance</h5>
+      <div class="row g-3 mb-3">
+        <div class="col">
+          <input type="text" class="form-control" id="prenomStart" placeholder="Prénom">
         </div>
+        <div class="col">
+          <input type="text" class="form-control" id="nomStart" placeholder="Nom">
+        </div>
+        <div class="col">
+          <input type="date" class="form-control" id="dateStart">
+        </div>
+      </div>
+      <div class="text-center">
         <button class="btn btn-success" id="startSeanceBtn">Démarrer la séance</button>
       </div>
     </div>
+  </div>
 
-    <!-- Section principale -->
-    <div id="mainSection">
-      <p id="patientInfo" class="patient-info"></p>
-      <input type="date" id="dateSeance" style="display:none;">
+  <!-- Section principale -->
+  <div id="mainSection">
+    <p id="patientInfo" class="patient-info"></p>
+    <input type="date" id="dateSeance" style="display:none;">
 
-      <!-- Saisie exercices -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label">Exercice :</label>
-            <input type="text" class="form-control" id="exerciceName" list="listeExos" placeholder="Ex : Squat" />
-            <datalist id="listeExos">
-              <option value="Push Landmine">
-              <option value="Landmine rotation">
-              <option value="Shrugs">
-              <option value="DC Haltère">
-              <option value="DC">
-              <option value="Développé incliné">
-              <option value="Développé incliné haltère">
-              <option value="Développé militaire (assis ou pas)">
-              <option value="Développé Arnold (assis ou pas)">
-              <option value="Tirage Planche">
-              <option value="tirage vertical">
-              <option value="tirage horizontal">
-              <option value="Élévation latérale">
-              <option value="Tirage menton">
-              <option value="Oiseau">
-              <option value="Thruster">
-              <option value="Pull over">
-              <option value="Bucheron">
-              <option value="Traction">
-              <option value="Rowing">
-              <option value="Squat">
-              <option value="Front squat">
-              <option value="RDL">
-              <option value="Fente">
-              <option value="Hip thrust">
-              <option value="Soulevé de terre">
-              <option value="Squat over head">
-              <option value="Good morning">
-              <option value="Leg extension">
-              <option value="Leg curl">
-              <option value="Press">
-              <option value="Extension mollet">
-              <option value="Épaulé">
-              <option value="Tirage Haut D'épaulé">
-              <option value="1/2 Squat">
-              <option value="½ Front squat">
-            </datalist>
-          </div>
-
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-              <thead>
-                <tr>
-                  <th>Séries (x)</th>
-                  <th>Poids (kg)</th>
-                  <th>Répétitions</th>
-                  <th>RPE</th>
-                  <th>EVA</th>
-                  <th>Commentaire</th>
-                  <th>Supprimer</th>
-                </tr>
-              </thead>
-              <tbody id="tableBody"></tbody>
-            </table>
-          </div>
-          <button class="btn btn-secondary mb-3" id="addRowBtn">+ Ajouter un bloc de séries</button>
-          <br>
-          <button class="btn btn-success" id="saveExerciseBtn">Valider l’exercice</button>
+    <!-- Formulaire exercices -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">Exercice :</label>
+          <input type="text" class="form-control" id="exerciceName" list="listeExos" placeholder="Ex : Squat" />
+          <datalist id="listeExos">
+            <option value="Push Landmine">
+            <option value="Landmine rotation">
+            <option value="Shrugs">
+            <option value="DC Haltère">
+            <option value="DC">
+            <option value="Développé incliné">
+            <option value="Développé incliné haltère">
+            <option value="Développé militaire (assis ou pas)">
+            <option value="Développé Arnold (assis ou pas)">
+            <option value="Tirage Planche">
+            <option value="tirage vertical">
+            <option value="tirage horizontal">
+            <option value="Élévation latérale">
+            <option value="Tirage menton">
+            <option value="Oiseau">
+            <option value="Thruster">
+            <option value="Pull over">
+            <option value="Bucheron">
+            <option value="Traction">
+            <option value="Rowing">
+            <option value="Squat">
+            <option value="Front squat">
+            <option value="RDL">
+            <option value="Fente">
+            <option value="Hip thrust">
+            <option value="Soulevé de terre">
+            <option value="Squat over head">
+            <option value="Good morning">
+            <option value="Leg extension">
+            <option value="Leg curl">
+            <option value="Press">
+            <option value="Extension mollet">
+            <option value="Épaulé">
+            <option value="Tirage Haut D'épaulé">
+            <option value="1/2 Squat">
+            <option value="½ Front squat">
+          </datalist>
         </div>
-      </div>
 
-      <h4 class="mb-3">Tableau récapitulatif :</h4>
-      <button class="btn btn-outline-secondary copy-btn" id="copyTableBtn">Copier le contenu du tableau</button>
-      <div class="table-responsive mb-4">
-        <table class="table table-bordered align-middle" id="recapTable">
-          <thead>
-            <tr>
-              <th>Exercice</th>
-              <th>Série</th>
-              <th>Poids (kg)</th>
-              <th>Répétitions</th>
-              <th>RPE</th>
-              <th>EVA</th>
-              <th>Commentaire</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th>Séries (x)</th>
+                <th>Poids (kg)</th>
+                <th>Répétitions</th>
+                <th>RPE</th>
+                <th>EVA</th>
+                <th>Commentaire</th>
+                <th>Supprimer</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <button class="btn btn-outline-secondary mb-3" id="addRowBtn">+ Ajouter un bloc de séries</button>
+        <br>
+        <button class="btn btn-success" id="saveExerciseBtn">Valider l’exercice</button>
       </div>
+    </div>
 
-      <div class="d-flex gap-3 mb-4">
-        <button class="btn btn-primary" id="exportExcelBtn">Exporter en Excel</button>
-        <button class="btn btn-warning" id="newSeanceBtn">Nouvelle séance</button>
-      </div>
+    <h4 class="mb-3">Tableau récapitulatif :</h4>
+    <button class="btn btn-outline-secondary mb-3" id="copyTableBtn">Copier le contenu du tableau</button>
+    <div class="table-responsive mb-4">
+      <table class="table table-bordered align-middle" id="recapTable">
+        <thead>
+          <tr>
+            <th>Exercice</th>
+            <th>Série</th>
+            <th>Poids (kg)</th>
+            <th>Répétitions</th>
+            <th>RPE</th>
+            <th>EVA</th>
+            <th>Commentaire</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="d-flex gap-3 mb-4">
+      <button class="btn btn-success" id="exportExcelBtn">Exporter en Excel</button>
+      <button class="btn btn-warning" id="newSeanceBtn">Nouvelle séance</button>
     </div>
   </div>
 

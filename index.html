@@ -116,30 +116,44 @@
   margin-right: 10px; /* décalage vers la gauche */
 }
 @media (max-width: 768px) {
-  .logo-container {
-    position: static;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
   .logo-container img {
-    height: 80px; /* taille réduite pour mobile */
-    max-width: 100%;
+    height: 100px;
+    margin-right: 5px;
   }
 
-  body {
-    padding: 20px 10px;
+  .patient-box {
+    padding: 10px;
   }
 
-  table {
-    font-size: 0.85rem;
+  table td input.form-control {
+    font-size: 12px;
+    padding: 4px 6px;
   }
 
-  .d-flex.gap-3 {
-    flex-direction: column;
-    align-items: stretch;
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .table th, .table td {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .btn, .btn-sm {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  label.form-label {
+    color: #ffffff;
+    font-size: 14px;
+  }
+
+  #mainSection {
+    margin-top: 30px;
   }
 }
+
 
   </style>
 </head>

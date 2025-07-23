@@ -477,7 +477,7 @@
     });
   });
 
-  exportExcelBtn.addEventListener('click', () => {
+    exportExcelBtn.addEventListener('click', () => {
     const prenom = document.getElementById('prenomPatient').value.trim();
     const nom = document.getElementById('nomPatient').value.trim();
     if (!prenom || !nom) {
@@ -518,8 +518,7 @@
     const fileName = `${prenom}_${nom}_Seance.xlsx`;
     XLSX.writeFile(wb, fileName);
   });
-  
-<script>
+
   // Bouton d'envoi
   const envoyerBtn = document.createElement("button");
   envoyerBtn.className = "btn btn-success";
@@ -559,8 +558,6 @@
     });
   });
 </script>
-
-
 
 </body>
 </html>

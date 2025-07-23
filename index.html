@@ -557,12 +557,12 @@
     // Afficher le loading
     document.getElementById("loadingOverlay").style.display = "flex";
 
-    console.log("Envoi au serveur :", {
+    console.log("Envoi au serveur : " + JSON.stringify({
   nom,
   prenom,
   date,
   seance: seanceData
-});
+}));
 
 
     fetch("https://script.google.com/macros/s/AKfycbwJ7vURGoJxc8sMbSJ-gRUWeIUrgpip2pePX5wANvqa37M8tAhiBzCU-PaZK9R1tFTNEg/exec", {

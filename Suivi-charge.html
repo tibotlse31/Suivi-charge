@@ -236,7 +236,240 @@
     </div>
   </div>
 
-  <!-- Ton script JS reste inchangé -->
-  <!-- Tu peux le remettre tel quel ici -->
+  <script>
+  const startSeanceBtn = document.getElementById('startSeanceBtn');
+  const newSeanceBtn = document.getElementById('newSeanceBtn');
+  const addRowBtn = document.getElementById('addRowBtn');
+  const saveExerciseBtn = document.getElementById('saveExerciseBtn');
+  const exportExcelBtn = document.getElementById('exportExcelBtn');
+  const copyTableBtn = document.getElementById('copyTableBtn');
+  const tableBody = document.getElementById('tableBody');
+  const recapTableBody = document.querySelector('#recapTable tbody');
+
+  let seanceData = [];
+
+  window.onload = () => {
+    document.getElementById('dateStart').value = getTodayDate();
+  };
+
+  function getTodayDate() {
+    const d = new Date();
+    return d.toISOString().substring(0, 10);
+  }
+
+  startSeanceBtn.addEventListener('click', () => {
+    const prenom = document.getElementById('prenomStart').value.trim();
+    const nom = document.getElementById('nomStart').value.trim();
+    const date = document.getElementById('dateStart').value;
+
+    if (!prenom || !nom || !date) {
+      alert("Merci de saisir le prénom, le nom et la date de la séance !");
+      return;
+    }
+
+    document.getElementById('prenomPatient').value = prenom;
+    document.getElementById('nomPatient').value = nom;
+    document.getElementById('dateSeance').value = date;
+
+    updatePatientInfo();
+
+    document.getElementById('startSection').style.display = 'none';
+    document.getElementById('mainSection').style.display = 'block';
+  });
+
+  startSeanceBtn.addEventListener('touchstart', () => {
+    startSeanceBtn.click();
+  });
+
+  newSeanceBtn.addEventListener('click', () => {
+    if (confirm("Voulez-vous vraiment recommencer une nouvelle séance ?")) {
+      seanceData = [];
+      tableBody.innerHTML = '';
+      recapTableBody.innerHTML = '';
+      document.getElementById('exerciceName').value = '';
+      document.getElementById('prenomStart').value = '';
+      document.getElementById('nomStart').value = '';
+      document.getElementById('dateStart').value = getTodayDate();
+      document.getElementById('startSection').style.display = 'block';
+      document.getElementById('mainSection').style.display = 'none';
+    }
+  });
+
+  function updatePatientInfo() {
+    const prenom = document.getElementById('prenomPatient').value;
+    const nom = document.getElementById('nomPatient').value;
+    const date = document.getElementById('dateSeance').value;
+    document.getElementById('patientInfo').textContent = `Séance de ${prenom} ${nom} - ${date}`;
+  }
+
+  document.getElementById('dateSeance').addEventListener('change', () => {
+    updatePatientInfo();
+    seanceData.forEach(item => {
+      item.date = document.getElementById('dateSeance').value;
+    });
+    refreshRecapTable();
+  });
+
+  addRowBtn.addEventListener('click', () => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="number" class="form-control nb-series-input" min="1" value="1"></td>
+      <td><input type="number" class="form-control poids-input"></td>
+      <td><input type="number" class="form-control reps-input"></td>
+      <td><input type="number" step="0.5" class="form-control rpe-input"></td>
+      <td><input type="number" step="0.5" class="form-control eva-input"></td>
+      <td><input type="text" class="form-control comment-input"></td>
+      <td class="text-center"><button class="btn btn-danger btn-sm delete-btn">Supprimer</button></td>
+    `;
+    tr.querySelector('.delete-btn').addEventListener('click', () => {
+      tr.remove();
+    });
+    tableBody.appendChild(tr);
+  });
+
+  saveExerciseBtn.addEventListener('click', () => {
+    const exercice = document.getElementById('exerciceName').value.trim();
+    if (!exercice) {
+      alert("Merci de renseigner le nom de l'exercice !");
+      return;
+    }
+    const rows = tableBody.querySelectorAll('tr');
+    if (rows.length === 0) {
+      alert("Ajoute au moins un bloc de séries !");
+      return;
+    }
+
+    let serieCounter = 1;
+    const date = document.getElementById('dateSeance').value;
+
+    rows.forEach(tr => {
+      const nbSeries = parseInt(tr.querySelector('.nb-series-input').value) || 1;
+      const poids = tr.querySelector('.poids-input').value;
+      const reps = tr.querySelector('.reps-input').value;
+      const rpe = tr.querySelector('.rpe-input').value;
+      const eva = tr.querySelector('.eva-input').value;
+      const comment = tr.querySelector('.comment-input').value;
+
+      for (let i = 0; i < nbSeries; i++) {
+        const dataRow = {
+          exercice,
+          serie: serieCounter,
+          poids,
+          reps,
+          rpe,
+          eva,
+          comment,
+          date
+        };
+        seanceData.push(dataRow);
+        serieCounter++;
+      }
+    });
+
+    tableBody.innerHTML = '';
+    document.getElementById('exerciceName').value = '';
+    refreshRecapTable();
+    alert("Exercice ajouté !");
+  });
+
+  function refreshRecapTable() {
+    recapTableBody.innerHTML = '';
+    seanceData.forEach(item => appendToRecapTable(item));
+  }
+
+  function appendToRecapTable(data) {
+    const tr = document.createElement('tr');
+    const cells = [
+      data.exercice,
+      data.serie,
+      data.poids,
+      data.reps,
+      data.rpe,
+      data.eva,
+      data.comment,
+      data.date
+    ];
+    cells.forEach((text, index) => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      if (index !== 1) {
+        td.setAttribute('contenteditable', 'true');
+        td.addEventListener('blur', () => {
+          const rowIndex = tr.rowIndex - 1;
+          const keys = ['exercice', 'serie', 'poids', 'reps', 'rpe', 'eva', 'comment', 'date'];
+          const key = keys[index];
+          seanceData[rowIndex][key] = td.textContent;
+        });
+      }
+      tr.appendChild(td);
+    });
+
+    const tdDelete = document.createElement('td');
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-danger btn-sm';
+    btn.textContent = 'Supprimer';
+    btn.addEventListener('click', () => {
+      const rowIndex = tr.rowIndex - 1;
+      seanceData.splice(rowIndex, 1);
+      tr.remove();
+    });
+    tdDelete.appendChild(btn);
+    tr.appendChild(tdDelete);
+    recapTableBody.appendChild(tr);
+  }
+
+  copyTableBtn.addEventListener('click', () => {
+    let txt = "";
+    seanceData.forEach(d => {
+      txt += `${d.exercice}\t${d.serie}\t${d.poids}\t${d.reps}\t${d.rpe}\t${d.eva}\t${d.comment}\t${d.date}\n`;
+    });
+    navigator.clipboard.writeText(txt).then(() => {
+      alert("Contenu du tableau copié dans le presse-papiers !");
+    });
+  });
+
+  exportExcelBtn.addEventListener('click', () => {
+    const prenom = document.getElementById('prenomPatient').value.trim();
+    const nom = document.getElementById('nomPatient').value.trim();
+    if (!prenom || !nom) {
+      alert("Merci de remplir le prénom et le nom du patient !");
+      return;
+    }
+
+    const wsData = [
+      ["Exercice", "Série", "Poids (kg)", "Répétitions", "RPE", "EVA", "Commentaire", "Date"]
+    ];
+    seanceData.forEach(item => {
+      wsData.push([
+        item.exercice,
+        item.serie,
+        item.poids,
+        item.reps,
+        item.rpe,
+        item.eva,
+        item.comment,
+        item.date
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols'] = [
+      { wch: 20 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 10 },
+      { wch: 30 },
+      { wch: 12 }
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Séance");
+
+    const fileName = `${prenom}_${nom}_Seance.xlsx`;
+    XLSX.writeFile(wb, fileName);
+  });
+</script>
+
 </body>
 </html>

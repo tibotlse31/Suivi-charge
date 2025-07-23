@@ -537,26 +537,26 @@
     }
 
     fetch("https://script.google.com/macros/s/AKfycbwk-wdzolqyPiwsId9ny695ksvA_0q8owF6tjlrJCivoV0uIJTd2joYHcdfYK7COBgqIg/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nom,
-        prenom,
-        date,
-        seance: seanceData
-      }),
-    })
-    .then(() => {
-      alert("✅ Séance enregistrée avec succès !");
-    })
-    .catch((error) => {
-      console.error("Erreur lors de l'envoi :", error);
-      alert("❌ Une erreur est survenue.");
-    });
-  });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    nom,
+    prenom,
+    date,
+    seance: seanceData
+  }),
+})
+.then(response => response.text())  // <- récupérer la réponse textuelle
+.then(text => {
+  alert("✅ " + text);  // afficher ce que répond le script (succès ou erreur)
+})
+.catch((error) => {
+  console.error("Erreur lors de l'envoi :", error);
+  alert("❌ Une erreur est survenue.");
+});
+
 </script>
 
 </body>

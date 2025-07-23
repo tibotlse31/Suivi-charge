@@ -528,18 +528,7 @@
   envoyerBtn.id = "submitToGoogle";
   document.querySelector(".d-flex").appendChild(envoyerBtn);
 
-  async function verifierFeuilleExiste(prenom) {
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwJ7vURGoJxc8sMbSJ-gRUWeIUrgpip2pePX5wANvqa37M8tAhiBzCU-PaZK9R1tFTNEg/exec');
-    const feuilles = await response.json();
-    return feuilles.includes(prenom);
-  } catch (error) {
-    alert("Impossible de vérifier la liste des feuilles. Envoi annulé.");
-    return false;
-  }
-}
-
-document.getElementById("submitToGoogle").addEventListener("click", async function () {
+ document.getElementById("submitToGoogle").addEventListener("click", function () {
   const nom = document.getElementById("nomPatient").value.trim();
   const prenom = document.getElementById("prenomPatient").value.trim();
   const date = document.getElementById("dateSeance").value;
@@ -547,15 +536,6 @@ document.getElementById("submitToGoogle").addEventListener("click", async functi
   if (!nom || !prenom || seanceData.length === 0) {
     alert("Merci de compléter toutes les informations et de valider au moins un exercice !");
     return;
-  }
-
-  const existe = await verifierFeuilleExiste(prenom);
-  if (!existe) {
-    const confirmation = confirm(`Il n'existe pas de feuille pour "${prenom}". Voulez-vous créer une nouvelle feuille ?`);
-    if (!confirmation) {
-      alert("Enregistrement annulé.");
-      return;
-    }
   }
 
   fetch("https://script.google.com/macros/s/AKfycbwJ7vURGoJxc8sMbSJ-gRUWeIUrgpip2pePX5wANvqa37M8tAhiBzCU-PaZK9R1tFTNEg/exec", {
@@ -574,6 +554,7 @@ document.getElementById("submitToGoogle").addEventListener("click", async functi
     alert("❌ Une erreur est survenue.");
   });
 });
+
 
 
 

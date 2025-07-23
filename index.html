@@ -108,55 +108,70 @@
     }
 
     .logo-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding-right: 10px; /* optionnel */
-}
-.logo-container img {
-  height: 160px;
-  margin-right: 10px; /* décalage vers la gauche */
-}
-@media (max-width: 768px) {
-  .logo-container img {
-    height: 100px;
-    margin-right: 5px;
-  }
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding-right: 10px; /* optionnel */
+    }
+    .logo-container img {
+      height: 160px;
+      margin-right: 10px; /* décalage vers la gauche */
+    }
+    @media (max-width: 768px) {
+      .logo-container img {
+        height: 100px;
+        margin-right: 5px;
+      }
 
-  .patient-box {
-    padding: 10px;
-  }
+      .patient-box {
+        padding: 10px;
+      }
 
-  table td input.form-control {
-    font-size: 12px;
-    padding: 4px 6px;
-  }
+      table td input.form-control {
+        font-size: 12px;
+        padding: 4px 6px;
+      }
 
-  .table-responsive {
-    overflow-x: auto;
-  }
+      .table-responsive {
+        overflow-x: auto;
+      }
 
-  .table th, .table td {
-    font-size: 12px;
-    white-space: nowrap;
-  }
+      .table th, .table td {
+        font-size: 12px;
+        white-space: nowrap;
+      }
 
-  .btn, .btn-sm {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
+      .btn, .btn-sm {
+        font-size: 14px;
+        padding: 6px 10px;
+      }
 
-  label.form-label {
-    color: #ffffff;
-    font-size: 14px;
-  }
+      label.form-label {
+        color: #ffffff;
+        font-size: 14px;
+      }
 
-  #mainSection {
-    margin-top: 30px;
-  }
-}
+      #mainSection {
+        margin-top: 30px;
+      }
+    }
 
-
+    /* Loading overlay */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.6);
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -291,6 +306,7 @@
     </div>
   </div>
 
+  <div id="loadingOverlay">Chargement en cours...</div>
 
 <script>
   const startSeanceBtn = document.getElementById('startSeanceBtn');
@@ -479,7 +495,7 @@
     });
   });
 
-    exportExcelBtn.addEventListener('click', () => {
+  exportExcelBtn.addEventListener('click', () => {
     const prenom = document.getElementById('prenomPatient').value.trim();
     const nom = document.getElementById('nomPatient').value.trim();
     if (!prenom || !nom) {
@@ -528,36 +544,39 @@
   envoyerBtn.id = "submitToGoogle";
   document.querySelector(".d-flex").appendChild(envoyerBtn);
 
- document.getElementById("submitToGoogle").addEventListener("click", function () {
-  const nom = document.getElementById("nomPatient").value.trim();
-  const prenom = document.getElementById("prenomPatient").value.trim();
-  const date = document.getElementById("dateSeance").value;
+  document.getElementById("submitToGoogle").addEventListener("click", () => {
+    const nom = document.getElementById("nomPatient").value.trim();
+    const prenom = document.getElementById("prenomPatient").value.trim();
+    const date = document.getElementById("dateSeance").value;
 
-  if (!nom || !prenom || seanceData.length === 0) {
-    alert("Merci de compléter toutes les informations et de valider au moins un exercice !");
-    return;
-  }
+    if (!nom || !prenom || seanceData.length === 0) {
+      alert("Merci de compléter toutes les informations et de valider au moins un exercice !");
+      return;
+    }
 
-  fetch("https://script.google.com/macros/s/AKfycbwJ7vURGoJxc8sMbSJ-gRUWeIUrgpip2pePX5wANvqa37M8tAhiBzCU-PaZK9R1tFTNEg/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      nom,
-      prenom,
-      date,
-      seance: seanceData
-    }),
-  })
-  .then(response => response.text())
-  .then(text => alert("✅ " + text))
-  .catch(error => {
-    console.error("Erreur lors de l'envoi :", error);
-    alert("❌ Une erreur est survenue.");
+    // Afficher le loading
+    document.getElementById("loadingOverlay").style.display = "flex";
+
+    fetch("https://script.google.com/macros/s/AKfycbwJ7vURGoJxc8sMbSJ-gRUWeIUrgpip2pePX5wANvqa37M8tAhiBzCU-PaZK9R1tFTNEg/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        nom,
+        prenom,
+        date,
+        seance: seanceData
+      }),
+    })
+    .then(response => response.text())
+    .then(text => {
+      alert("✅ " + text);
+      document.getElementById("loadingOverlay").style.display = "none";
+    })
+    .catch(error => {
+      console.error("Erreur lors de l'envoi :", error);
+      alert("❌ Une erreur est survenue.");
+      document.getElementById("loadingOverlay").style.display = "none";
+    });
   });
-});
-
-
-
-
 </script>
 
 </body>

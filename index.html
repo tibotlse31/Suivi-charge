@@ -10,15 +10,17 @@
   <style>
     body {
       font-family: 'Open Sans', sans-serif;
-      background: linear-gradient(to bottom, #1d1d1d, #2a2a2a);
+      background: linear-gradient(to bottom, #1e1e1e, #2a2a2a);
       color: #ffffff;
-      padding: 20px;
+      padding: 100px 20px 20px 20px;
     }
+
     h1, h4 {
       color: #3ca73c;
       text-align: center;
       margin-bottom: 30px;
     }
+
     .patient-box {
       background-color: #2f2f2f;
       border: 2px solid #3ca73c;
@@ -29,71 +31,88 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .patient-info {
       font-weight: bold;
       color: #3ca73c;
       margin-bottom: 20px;
       text-align: center;
     }
+
     table {
       background-color: #1d1d1d;
       border: 1px solid #444;
       border-radius: 8px;
     }
+
     th {
       background-color: #3ca73c;
       color: #ffffff;
       text-align: center;
     }
+
     td[contenteditable="true"] {
       background-color: #3a3a3a;
       cursor: text;
     }
+
     .btn-success {
       background-color: #3ca73c;
       border: none;
       color: white;
     }
+
     .btn-success:hover {
       background-color: #2e7c2e;
     }
-    .btn-outline-secondary {
+
+    .btn-outline-light-green {
       color: #3ca73c;
       border-color: #3ca73c;
+      background-color: transparent;
     }
-    .btn-outline-secondary:hover {
+
+    .btn-outline-light-green:hover {
       background-color: #3ca73c;
       color: white;
     }
+
     .btn-warning {
       background-color: #e30613;
       border: none;
       color: white;
     }
+
     .btn-warning:hover {
       background-color: #b1040f;
     }
+
     input, select, textarea {
       border: 1px solid #3ca73c;
       background-color: #222;
       color: white;
     }
+
     .form-control:focus {
       background-color: #2a2a2a;
       color: #fff;
       border-color: #3ca73c;
       box-shadow: 0 0 0 0.2rem rgba(60, 167, 60, 0.25);
     }
+
     #mainSection {
       display: none;
+      margin-top: 40px;
     }
+
     .logo-container {
       position: absolute;
-      top: 20px;
+      top: 25px;
       right: 40px;
     }
+
     .logo-container img {
-      height: 160px;
+      height: 170px;
     }
   </style>
 </head>
@@ -135,8 +154,7 @@
     <p id="patientInfo" class="patient-info"></p>
     <input type="date" id="dateSeance" style="display:none;">
 
-    <!-- Formulaire exercices -->
-    <div class="card mb-4">
+    <div class="card mb-4" style="background-color: #2b2b2b; border: 1px solid #3ca73c;">
       <div class="card-body">
         <div class="mb-3">
           <label class="form-label">Exercice :</label>
@@ -182,7 +200,7 @@
         </div>
 
         <div class="table-responsive">
-          <table class="table table-bordered align-middle">
+          <table class="table table-bordered align-middle text-white">
             <thead>
               <tr>
                 <th>Séries (x)</th>
@@ -197,16 +215,16 @@
             <tbody id="tableBody"></tbody>
           </table>
         </div>
-        <button class="btn btn-outline-secondary mb-3" id="addRowBtn">+ Ajouter un bloc de séries</button>
+        <button class="btn btn-outline-light-green mb-3" id="addRowBtn">+ Ajouter un bloc de séries</button>
         <br>
         <button class="btn btn-success" id="saveExerciseBtn">Valider l’exercice</button>
       </div>
     </div>
 
     <h4 class="mb-3">Tableau récapitulatif :</h4>
-    <button class="btn btn-outline-secondary mb-3" id="copyTableBtn">Copier le contenu du tableau</button>
+    <button class="btn btn-outline-light-green mb-3" id="copyTableBtn">Copier le contenu du tableau</button>
     <div class="table-responsive mb-4">
-      <table class="table table-bordered align-middle" id="recapTable">
+      <table class="table table-bordered align-middle text-white" id="recapTable">
         <thead>
           <tr>
             <th>Exercice</th>
@@ -229,6 +247,7 @@
       <button class="btn btn-warning" id="newSeanceBtn">Nouvelle séance</button>
     </div>
   </div>
+
 
 <script>
   const startSeanceBtn = document.getElementById('startSeanceBtn');

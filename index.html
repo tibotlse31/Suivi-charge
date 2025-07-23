@@ -548,14 +548,13 @@
     seance: seanceData
   }),
 })
-.then(response => response.text())  // <- récupérer la réponse textuelle
-.then(text => {
-  alert("✅ " + text);  // afficher ce que répond le script (succès ou erreur)
-})
-.catch((error) => {
+.then(response => response.text())
+.then(text => alert("✅ " + text))
+.catch(error => {
   console.error("Erreur lors de l'envoi :", error);
   alert("❌ Une erreur est survenue.");
 });
+
 
 </script>
 
